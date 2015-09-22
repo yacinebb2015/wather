@@ -36,19 +36,28 @@ starter.config(function($stateProvider, $urlRouterProvider) {
     state('about', {
       url: '/about',
       templateUrl: 'templates/about.html'
+    })
+    .state('wather', {
+      url: '/wather',
+      templateUrl: 'templates/wather.html'
     });
 
     $urlRouterProvider.otherwise('/home');
 });
 
-starter.controller('areaCtrl', ['$scope', function($scope) {
+starter.controller('areaCtrl', ['$scope', '$http', '$location', function($scope, $http, $location) {
 
   $scope.infos = {
-    city: 'France'
+    city: ''
   };
 
   $scope.selectCity = function() {
-     
+
+    $http.get('http://maps.googleapis.com/maps/api/geocode/json?address=' + $scope.infos.city)
+    .then(function(response) {
+      var results = response.data.results[0];
+      $location.url('/wather');
+    });     
   };
 
 }]);
